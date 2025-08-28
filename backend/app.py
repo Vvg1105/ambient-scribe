@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.routers.ws import router as ws_router
 from backend.routers.soap import router as soap_router
+from backend.routers.rules import router as rules_router
 import uvicorn
 
 app = FastAPI()
@@ -17,6 +18,7 @@ app.add_middleware(
 
 app.include_router(ws_router)
 app.include_router(soap_router, prefix="/soap", tags=["soap"])
+app.include_router(rules_router, prefix="/rules", tags=["rules"])
 
 @app.get("/")
 def read_root():
