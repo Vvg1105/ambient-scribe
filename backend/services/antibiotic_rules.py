@@ -13,9 +13,10 @@ system_prompt = """
 You are a clinical assistant. Task: extract antibiotic GENERIC names present in the provided text.
 - Output ONLY JSON: {"meds":[lowercase generic antibiotic names]}
 - No prose. No markdown. If none, return {"meds":[]}
-- Choose names ONLY from this allowlist (lowercase):
-  amoxicillin, ampicillin, piperacillin, azithromycin, clarithromycin, erythromycin,
-  doxycycline, ciprofloxacin, levofloxacin, metronidazole, cephalexin, ceftriaxone
+- Extract ANY antibiotic generic names mentioned in the text (not just from a specific list)
+- Focus on antibiotics/antimicrobials, not other medications
+- Use lowercase generic names only
+- Examples of antibiotics: amoxicillin, azithromycin, ciprofloxacin, vancomycin, clindamycin, etc.
 """
 
 
@@ -41,8 +42,8 @@ def extract_meds_from_text(plan_text: str) -> list[str]:
             model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": "Example input:\nStart amoxicillin 500 mg TID\nReturn strictly JSON: {\"meds\": [\"amoxicillin\"]}"},
-                {"role": "assistant", "content": "{\"meds\":[\"amoxicillin\"]}"},
+                {"role": "user", "content": "Example input:\nStart amoxicillin 500 mg TID and consider vancomycin if needed\nReturn strictly JSON: {\"meds\": [\"amoxicillin\", \"vancomycin\"]}"},
+                {"role": "assistant", "content": "{\"meds\":[\"amoxicillin\", \"vancomycin\"]}"},
                 {"role": "user", "content": user_prompt},
             ],
             temperature=0.0,
@@ -75,7 +76,8 @@ def generate_recommendations(findings_dict: dict) -> RuleRecommendationList:
     """
     try:
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        schema = RuleRecommendationList.model_json_schema() | {"additionalProperties": False}
+        schema = RuleRecommendationList.model_json_schema()
+        schema["additionalProperties"] = False
 
         payload = json.dumps(findings_dict, ensure_ascii=False)
 
@@ -87,10 +89,7 @@ def generate_recommendations(findings_dict: dict) -> RuleRecommendationList:
                 {"role": "user", "content": f"Findings JSON:\n{payload}\n{return_instr}"},
             ],
             temperature=0.2,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {"name": "abx_recs", "strict": True, "schema": schema},
-            },
+            response_format={"type": "json_object"},
             max_tokens=250,
             timeout=15,
         )
