@@ -1,7 +1,7 @@
-from sqlachemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON
-from sqlachemy.orm import relationship
-from sqlachemy.sql import func
-from backend.core.database import Base
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from core.database import Base
 
 class Recommendation(Base):
     __tablename__ = "recommendations"

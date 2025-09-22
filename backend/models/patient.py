@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text
 from sqlalchemy.orm import relationship
-from sqlachemy.sql import func
-from backend.core.database import Base
+from sqlalchemy.sql import func
+from core.database import Base
 
 class Patient(Base):
     __tablename__ = "patients"
@@ -14,8 +14,8 @@ class Patient(Base):
     notes = Column(Text, nullable = True)
 
     # Timestamps
-    created_at = Column(DateTime(timezone=True))
-    updated_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
     encounters = relationship("Encounter", back_populates="patient")

@@ -1,7 +1,7 @@
-from sqlachemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON, Boolean
-from sqlachemy.orm import relationship
-from sqlachemy.sql import func
-from backend.core.database import Base
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON, Boolean
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from core.database import Base
 
 class RuleSet(Base):
     __tablename__ = "rule_sets"

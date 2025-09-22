@@ -1,7 +1,7 @@
-from sqlachemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, JSON
-from sqlachemy.orm import relationship
-from sqlachemy.sql import func
-from backend.core.database import Base
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, JSON
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from core.database import Base
 
 class Transcript(Base):
     __tablename__ = "transcripts"
@@ -11,7 +11,7 @@ class Transcript(Base):
     content = Column(Text, nullable = False)
     language = Column(String(10), default = "en")
     duration_seconds = Column(Float, nullable = True)
-    metadata = Column(JSON, nullable = True)
+    transcript_metadata = Column(JSON, nullable = True)
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

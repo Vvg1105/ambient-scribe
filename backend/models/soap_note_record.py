@@ -1,7 +1,7 @@
-from sqlachemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
-from sqlachemy.orm import relationship
-from sqlachemy.sql import func
-from backend.core.database import Base
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from core.database import Base
 
 class SOAPNoteRecord(Base):
     __tablename__ = "soap_note_records"
@@ -16,7 +16,7 @@ class SOAPNoteRecord(Base):
 
     # AI Processing Metadata
     model_used = Column(String(50), nullable = True)
-    procesisng_time_ms = Column(Integer, nullable = True)
+    processing_time_ms = Column(Integer, nullable = True)
     confidence_score = Column(Float, nullable = True)
 
     # Timestamps
