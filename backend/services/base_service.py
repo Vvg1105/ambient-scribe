@@ -22,16 +22,16 @@ class BaseService(Generic[ModelType]):
         result = await db.execute(select(self.model).where(self.model.id == id))
         return result.scalar_one_or_none()
     
-    async def get_all(self, db: AsyncSession) -> List[ModelType]:
+    async def get_all(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[ModelType]:
         """Get all records from the database"""
-        result = await db.execute(select(self.model))
+        result = await db.execute(select(self.model).offset(skip).limit(limit))
         return result.scalars().all()
     
     async def update(self, db: AsyncSession, id: int, **kwargs) -> Optional[ModelType]:
         """Update a record by its ID"""
         result = await db.execute(update(self.model).where(self.model.id == id).values(**kwargs))
         await db.commit()
-        return result.scalar_one_or_none()
+        return await self.get(db, id)
 
     async def delete(self, db: AsyncSession, id: int) -> bool:
         """Delete a record by its ID"""
