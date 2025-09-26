@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routers.ws import router as ws_router
-from backend.routers.soap import router as soap_router
-from backend.routers.rules import router as rules_router
-from backend.routers.patients import router as patients_router
+from routers.ws import router as ws_router
+from routers.soap import router as soap_router
+from routers.rules import router as rules_router
+from routers.patients import router as patients_router
 import uvicorn
 
 app = FastAPI()

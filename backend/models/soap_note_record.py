@@ -24,4 +24,4 @@ class SOAPNoteRecord(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
-    encounter = relationship("Encounter", back_populates="soap_note_records")
+    encounter = relationship("Encounter", back_populates="soap_notes")

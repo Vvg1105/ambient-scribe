@@ -20,4 +20,4 @@ class SafetyFinding(Base):
 
     # Relationships
     encounter = relationship("Encounter", back_populates="safety_findings")
-    recommendations = relationship("Recommendation", back_populates="safety_findings")
+    recommendations = relationship("Recommendation", back_populates="safety_finding")

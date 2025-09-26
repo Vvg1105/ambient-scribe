@@ -1,6 +1,6 @@
 from typing import List
-from backend.schemas.rules import AntibioticFindings, RuleFinding
-from backend.schemas.rec import MedExtractionResult, RuleRecommendationList, RuleRecommendation
+from schemas.rules import AntibioticFindings, RuleFinding
+from schemas.rec import MedExtractionResult, RuleRecommendationList, RuleRecommendation
 from openai import OpenAI
 from dotenv import load_dotenv
 import os

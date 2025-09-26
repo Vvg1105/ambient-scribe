@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from backend.schemas.rules import AntibioticCheckRequest, AntibioticFindings
-from backend.services.antibiotic_rules import check_antibiotics, analyze_antibiotics
+from schemas.rules import AntibioticCheckRequest, AntibioticFindings
+from services.antibiotic_rules import check_antibiotics, analyze_antibiotics
 
 
 router = APIRouter()

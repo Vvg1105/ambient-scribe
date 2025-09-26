@@ -1,7 +1,7 @@
 import json
 from typing import List
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from backend.schemas.transcription import (
+from schemas.transcription import (
     ClientInit, ClientAudio, ClientEnd,
     ServerTranscriptChunk, ServerFinal, ServerFinalSegment, ServerError
 )

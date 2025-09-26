@@ -1,4 +1,4 @@
-from backend.schemas.soap import SOAPNote
+from schemas.soap import SOAPNote
 from openai import OpenAI
 import openai
 import httpx
