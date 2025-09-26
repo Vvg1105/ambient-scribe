@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from services.soap_extractor import extract_soap_note
+from services.soap_extractor import _extract_with_llm
 from models.soap_note_record import SOAPNoteRecord
 from sqlalchemy import select
 
@@ -14,7 +14,7 @@ class SOAPService:
         """Extract SOAP note and save to database"""
 
         # Extract SOAP note using existing service
-        soap_note = extract_soap_note(transcript_content)
+        soap_note = _extract_with_llm(transcript_content)
 
         # Save to database
         soap_record = SOAPNoteRecord(
