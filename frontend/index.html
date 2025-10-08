@@ -1,0 +1,64 @@
+<button id="start">Start</button>
+<button id="stop" disabled>Stop</button>
+<button id="save" disabled>Save + Extract SOAP</button>
+<div><b>Status:</b> <span id="status">idle</span></div>
+<textarea id="transcript" rows="10" style="width:100%"></textarea>
+<script>
+  const statusEl = document.getElementById('status');
+  const textEl = document.getElementById('transcript');
+  const startBtn = document.getElementById('start');
+  const stopBtn  = document.getElementById('stop');
+  const saveBtn  = document.getElementById('save');
+
+  if (!('webkitSpeechRecognition' in window)) {
+    alert('Use Chrome for live transcription (Web Speech API).');
+  }
+  const recog = new webkitSpeechRecognition();
+  recog.lang = 'en-US';           // try 'en-KE', 'en-US', 'sw-KE' as needed
+  recog.continuous = true;
+  recog.interimResults = true;
+
+  let finalText = '';
+  startBtn.onclick = () => {
+    finalText = '';
+    textEl.value = '';
+    recog.start();
+    statusEl.textContent = 'listening…';
+    startBtn.disabled = true; stopBtn.disabled = false; saveBtn.disabled = true;
+  };
+  stopBtn.onclick = () => {
+    recog.stop();
+    statusEl.textContent = 'stopped';
+    startBtn.disabled = false; stopBtn.disabled = true; saveBtn.disabled = false;
+  };
+  recog.onresult = (evt) => {
+    let interim = '';
+    for (let i = evt.resultIndex; i < evt.results.length; i++) {
+      const t = evt.results[i][0].transcript;
+      if (evt.results[i].isFinal) finalText += t + ' ';
+      else interim += t;
+    }
+    textEl.value = (finalText + ' ' + interim).trim();
+  };
+  recog.onerror = (e) => { statusEl.textContent = 'error: ' + e.error; };
+
+  saveBtn.onclick = async () => {
+    const transcript = textEl.value.trim();
+    if (!transcript || transcript.length < 20) { alert('Transcript too short'); return; }
+    saveBtn.disabled = true; statusEl.textContent = 'saving…';
+    const payload = {
+      patient_id: 1,
+      encounter_type: 'consultation',
+      transcript,
+      chief_complaint: 'Free text'
+    };
+    const res = await fetch('http://localhost:8000/soap/extract-and-save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) { statusEl.textContent = 'save failed'; saveBtn.disabled = false; alert(await res.text()); return; }
+    const data = await res.json();
+    statusEl.textContent = `saved: encounter ${data.id}, SOAP ${data.soap_note.id}`;
+  };
+</script>

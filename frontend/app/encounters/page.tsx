@@ -120,9 +120,10 @@ export default function EncountersPage() {
       const fileInput = document.getElementById("audio-file") as HTMLInputElement
       if (fileInput) fileInput.value = ""
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to upload and transcribe audio"
       toast({
         title: "Error",
-        description: "Failed to upload and transcribe audio",
+        description: message,
         variant: "destructive",
       })
     } finally {

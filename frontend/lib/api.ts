@@ -15,8 +15,26 @@ import type {
   
   async function json<T>(res: Response): Promise<T> {
     if (!res.ok) {
-      const body = await res.text()
-      throw new Error(`HTTP ${res.status}: ${body}`)
+      const contentType = res.headers.get("content-type") || ""
+      let message = res.statusText || "Request failed"
+      let parsed: any = null
+      try {
+        if (contentType.includes("application/json")) {
+          parsed = await res.json()
+          const detail = typeof parsed?.detail === "string" ? parsed.detail : undefined
+          const msg = parsed?.message || parsed?.error || detail
+          if (msg) message = msg
+        } else {
+          const text = await res.text()
+          if (text) message = text.slice(0, 500)
+        }
+      } catch {
+        // ignore parsing errors; fall back to status text
+      }
+      const err = new Error(`HTTP ${res.status} ${res.statusText}: ${message}`)
+      ;(err as any).status = res.status
+      ;(err as any).body = parsed
+      throw err
     }
     return res.json()
   }

@@ -28,9 +28,10 @@ export default function PatientsPage() {
       const data = await api.listPatients({ search, limit: 100 })
       setPatients(data)
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to load patients"
       toast({
         title: "Error",
-        description: "Failed to load patients",
+        description: message,
         variant: "destructive",
       })
     } finally {

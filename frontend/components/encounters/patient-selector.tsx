@@ -29,9 +29,11 @@ export function PatientSelector({ selectedPatient, onPatientSelect }: PatientSel
       const data = await api.listPatients({ search, limit: 50 })
       setPatients(data)
     } catch (error) {
+      console.error("Error loading patients:", error)
+      const message = error instanceof Error ? error.message : "Failed to load patients"
       toast({
-        title: "Error",
-        description: "Failed to load patients",
+        title: "Error Loading Patients",
+        description: message,
         variant: "destructive",
       })
     } finally {
@@ -46,13 +48,13 @@ export function PatientSelector({ selectedPatient, onPatientSelect }: PatientSel
   }, [open])
 
   useEffect(() => {
-    if (searchTerm) {
+    if (searchTerm && open) {
       const debounceTimer = setTimeout(() => {
         loadPatients(searchTerm)
       }, 300)
       return () => clearTimeout(debounceTimer)
     }
-  }, [searchTerm])
+  }, [searchTerm, open])
 
   const formatPatientDisplay = (patient: Patient) => {
     const name = `${patient.first_name} ${patient.last_name}`
@@ -80,9 +82,15 @@ export function PatientSelector({ selectedPatient, onPatientSelect }: PatientSel
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
+      <PopoverContent className="w-full p-0 z-[9999]" align="start">
         <Command>
-          <CommandInput placeholder="Search patients..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <CommandInput 
+            placeholder="Search patients..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          />
           <CommandList>
             {loading ? (
               <div className="p-4 text-center text-sm text-muted-foreground">Loading patients...</div>

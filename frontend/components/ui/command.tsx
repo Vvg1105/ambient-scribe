@@ -20,8 +20,18 @@ export function CommandGroup({ className = "", ...props }: React.HTMLAttributes<
   return <div className={["p-1", className].join(" ")} {...props} />
 }
 
-export function CommandItem({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={["flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1 text-sm hover:bg-accent", className].join(" ")} {...props} />
+interface CommandItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  onSelect?: () => void
+}
+
+export function CommandItem({ className = "", onSelect, ...props }: CommandItemProps) {
+  return (
+    <div 
+      className={["flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1 text-sm hover:bg-accent", className].join(" ")} 
+      onClick={onSelect}
+      {...props} 
+    />
+  )
 }
 
 

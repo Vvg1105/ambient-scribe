@@ -89,9 +89,10 @@ export function PatientModal({ open, onOpenChange, patient, onSaved }: PatientMo
 
       onSaved()
     } catch (error) {
+      const message = error instanceof Error ? error.message : `Failed to ${isEditing ? "update" : "create"} patient`
       toast({
         title: "Error",
-        description: `Failed to ${isEditing ? "update" : "create"} patient`,
+        description: message,
         variant: "destructive",
       })
     } finally {

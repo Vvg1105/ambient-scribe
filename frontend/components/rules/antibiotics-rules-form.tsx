@@ -73,9 +73,10 @@ export function AntibioticsRulesForm() {
         description: "Antibiotics check completed",
       })
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to perform antibiotics check"
       toast({
         title: "Error",
-        description: "Failed to perform antibiotics check",
+        description: message,
         variant: "destructive",
       })
     } finally {
@@ -109,9 +110,10 @@ export function AntibioticsRulesForm() {
         description: "Antibiotics analysis completed",
       })
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to perform antibiotics analysis"
       toast({
         title: "Error",
-        description: "Failed to perform antibiotics analysis",
+        description: message,
         variant: "destructive",
       })
     } finally {

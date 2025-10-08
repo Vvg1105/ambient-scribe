@@ -91,9 +91,10 @@ export function ExtractSOAPForm() {
       setChiefComplaint("")
       setTranscript("")
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to extract SOAP notes"
       toast({
         title: "Error",
-        description: "Failed to extract SOAP notes",
+        description: message,
         variant: "destructive",
       })
     } finally {
