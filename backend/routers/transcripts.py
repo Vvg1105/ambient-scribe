@@ -90,6 +90,9 @@ async def transcribe_and_extract_soap(
         raise
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to initialize OpenAI client: {e}")
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"ERROR in transcripts/stt: {error_details}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
     
     
