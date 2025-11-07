@@ -9,6 +9,10 @@ import type {
     AntibioticCheckRequest,
     AntibioticFindings,
     STTResponse,
+    Encounter,
+    EncounterCreate,
+    EncounterUpdate,
+    EncounterDetail,
   } from "./types"
   
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
@@ -117,6 +121,52 @@ import type {
       form.set("audio", params.file)
       const res = await fetch(`${BASE_URL}/transcripts/stt`, { method: "POST", body: form })
       return json<STTResponse>(res)
+    },
+
+    // Encounters
+    listEncounters: (params?: { 
+      skip?: number
+      limit?: number
+      patient_id?: number
+      status?: string
+      encounter_type?: string
+    }) => {
+      const q = new URLSearchParams()
+      if (params?.skip !== undefined) q.set("skip", String(params.skip))
+      if (params?.limit !== undefined) q.set("limit", String(params.limit))
+      if (params?.patient_id !== undefined) q.set("patient_id", String(params.patient_id))
+      if (params?.status) q.set("status", params.status)
+      if (params?.encounter_type) q.set("encounter_type", params.encounter_type)
+      return fetch(`${BASE_URL}/encounters/?${q}`).then(json<EncounterDetail[]>)
+    },
+
+    getEncounter: (id: number) => 
+      fetch(`${BASE_URL}/encounters/${id}`).then(json<EncounterDetail>),
+
+    createEncounter: (body: EncounterCreate) =>
+      fetch(`${BASE_URL}/encounters/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then(json<Encounter>),
+
+    updateEncounter: (id: number, body: EncounterUpdate) =>
+      fetch(`${BASE_URL}/encounters/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then(json<Encounter>),
+
+    deleteEncounter: (id: number) =>
+      fetch(`${BASE_URL}/encounters/${id}`, {
+        method: "DELETE",
+      }).then(json<{ message: string }>),
+
+    getPatientEncounters: (patientId: number, params?: { skip?: number; limit?: number }) => {
+      const q = new URLSearchParams()
+      if (params?.skip !== undefined) q.set("skip", String(params.skip))
+      if (params?.limit !== undefined) q.set("limit", String(params.limit))
+      return fetch(`${BASE_URL}/encounters/patient/${patientId}/encounters?${q}`).then(json<EncounterDetail[]>)
     },
   }
   

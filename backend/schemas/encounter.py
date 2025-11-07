@@ -25,3 +25,48 @@ class Encounter(EncounterBase):
 
     class Config:
         from_attributes = True
+
+# Transcript schema for nested data
+class TranscriptInEncounter(BaseModel):
+    id: int
+    content: str
+    language: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# SOAP Note schema for nested data
+class SOAPNoteInEncounter(BaseModel):
+    id: int
+    subjective: str
+    objective: str
+    assessment: str
+    plan: str
+    model_used: Optional[str] = None
+    processing_time_ms: Optional[int] = None
+    confidence_score: Optional[float] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Patient info for nested data
+class PatientInEncounter(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    date_of_birth: Optional[datetime] = None
+    medical_record_number: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+# Detailed encounter with all related data
+class EncounterDetail(Encounter):
+    patient: Optional[PatientInEncounter] = None
+    transcripts: List[TranscriptInEncounter] = []
+    soap_notes: List[SOAPNoteInEncounter] = []
+
+    class Config:
+        from_attributes = True

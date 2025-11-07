@@ -9,11 +9,12 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Upload, FileAudio, CheckCircle, AlertCircle } from "lucide-react"
+import { Upload, FileAudio, CheckCircle, AlertCircle, FileText } from "lucide-react"
 import { api } from "@/lib/api"
 import type { Patient, STTResponse } from "@/lib/types"
 import { useToast } from "@/hooks/use-toast"
 import { PatientSelector } from "@/components/encounters/patient-selector"
+import { useRouter } from "next/navigation"
 
 const ENCOUNTER_TYPES = [
   "Initial Consultation",
@@ -43,6 +44,7 @@ export default function EncountersPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<STTResponse | null>(null)
   const { toast } = useToast()
+  const router = useRouter()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -142,9 +144,15 @@ export default function EncountersPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">New Encounter</h1>
-          <p className="text-muted-foreground">Upload audio files for transcription and encounter creation</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">New Encounter</h1>
+            <p className="text-muted-foreground">Upload audio files for transcription and encounter creation</p>
+          </div>
+          <Button variant="outline" onClick={() => window.location.href = "/encounters/history"}>
+            <FileText className="h-4 w-4 mr-2" />
+            View History
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -285,6 +293,10 @@ export default function EncountersPage() {
                         <p className="text-sm text-foreground whitespace-pre-wrap">{result.transcript_preview}</p>
                       </div>
                     </div>
+
+                    <Button variant="outline" className="w-full mt-4" onClick={() => router.push("/soap")}>
+                      View All SOAP Notes
+                    </Button>
                   </div>
                 </div>
               ) : (

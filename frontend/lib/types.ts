@@ -75,4 +75,64 @@ export type Patient = {
     patient_id: number
     transcript_preview: string
   }
+
+  // Encounter Types
+  export type Encounter = {
+    id: number
+    patient_id: number
+    encounter_type: string
+    chief_complaint?: string | null
+    status: string
+    encounter_date: string
+    created_at: string
+    updated_at?: string | null
+  }
+
+  export type EncounterCreate = {
+    patient_id: number
+    encounter_type: string
+    chief_complaint?: string | null
+    status?: string
+    encounter_date: string
+  }
+
+  export type EncounterUpdate = {
+    encounter_type?: string
+    chief_complaint?: string | null
+    status?: string
+    encounter_date?: string
+  }
+
+  export type TranscriptInEncounter = {
+    id: number
+    content: string
+    language?: string | null
+    created_at: string
+  }
+
+  export type SOAPNoteInEncounter = {
+    id: number
+    subjective: string
+    objective: string
+    assessment: string
+    plan: string
+    model_used?: string | null
+    processing_time_ms?: number | null
+    confidence_score?: number | null
+    created_at: string
+  }
+
+  export type PatientInEncounter = {
+    id: number
+    first_name: string
+    last_name: string
+    date_of_birth?: string | null
+    medical_record_number?: string | null
+  }
+
+  export type EncounterDetail = Encounter & {
+    patient?: PatientInEncounter | null
+    transcripts: TranscriptInEncounter[]
+    soap_notes: SOAPNoteInEncounter[]
+  }
   
