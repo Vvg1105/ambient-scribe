@@ -6,6 +6,7 @@ from routers.rules import router as rules_router
 from routers.patients import router as patients_router
 from routers.transcripts import router as transcripts_router
 from routers.encounters import router as encounters_router
+from routers.auth import router as auth_router
 import uvicorn
 
 app = FastAPI()
@@ -25,6 +26,7 @@ app.include_router(rules_router, prefix="/rules", tags=["rules"])
 app.include_router(patients_router, prefix="/patients", tags=["patients"])
 app.include_router(transcripts_router, prefix="/transcripts", tags=["transcripts"])
 app.include_router(encounters_router, prefix="/encounters", tags=["encounters"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 @app.get("/")
 def read_root():
